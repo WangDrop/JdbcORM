@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/SimpleOrm/src/main/java/com/wc/annotation/Column.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/SimpleOrm/src/main/java/com/wc/annotation/Entity.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/SimpleOrm/src/main/java/com/wc/annotation/Id.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/SimpleOrm/src/main/java/simpleORM/JdbcUtils.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/SimpleOrm/src/main/java/simpleORM/mysqlDao.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/SimpleOrm/src/main/java/simpleORM/mysqlDaoImpl.java" charset="UTF-8" />
+  </component>
+</project>

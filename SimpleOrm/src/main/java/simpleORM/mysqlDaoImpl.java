@@ -27,40 +27,40 @@ public class mysqlDaoImpl<T> implements mysqlDao<T> {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see simpleORM.mysqlDao#add(java.lang.Object) Ôö¼Ó”µ“ş²Ù×÷
+	 * @see simpleORM.mysqlDao#add(java.lang.Object) å¢åŠ æ•¸æ“šæ“ä½œ
 	 * 
-	 * @param T:”µ“şì±íÖĞ”µ“şŒ¦‘ªµÄŒ¦Ïó
+	 * @param T:æ•¸æ“šåº«è¡¨ä¸­æ•¸æ“šå°æ‡‰çš„å°è±¡
 	 */
 	public void add(T t) throws Exception {
 		Class<?> clazz = t.getClass();
-		// «@µÃ±íÃû³Æ
+		// ç²å¾—è¡¨åç§°
 		String tableName = getTableName(clazz);
 		StringBuilder fieldNames = new StringBuilder();
-		// »ñµÃ¶ÔÏóÓòÖĞ¶ÔÓ¦µÄÊı¾İ£¬ÉèÖÃprepareStatementµÄÊ±ºòĞèÒªÓÃµ½
+		// è·å¾—å¯¹è±¡åŸŸä¸­å¯¹åº”çš„æ•°æ®ï¼Œè®¾ç½®prepareStatementçš„æ—¶å€™éœ€è¦ç”¨åˆ°
 		List<Object> fieldValues = new ArrayList<Object>();
 		StringBuilder fieldPlaceHolder = new StringBuilder();
 		Field[] fields = clazz.getDeclaredFields();
 		PropertyDescriptor propertyDescriptor = null;
 		for (Field field : fields) {
-			// ÓÃÓÚ»ñÈ¡¶ÔÏóÖĞ¶ÔÓ¦µÄÓòµÄÖµ
+			// ç”¨äºè·å–å¯¹è±¡ä¸­å¯¹åº”çš„åŸŸçš„å€¼
 			propertyDescriptor = new PropertyDescriptor(field.getName(),
 					t.getClass());
-			// ÏÂÃæÕâ¸öÊÇÖ÷¼üÁĞ
+			// ä¸‹é¢è¿™ä¸ªæ˜¯ä¸»é”®åˆ—
 			if (field.isAnnotationPresent(Id.class)) {
 				fieldNames.append(field.getAnnotation(Id.class).value())
 						.append(",");
 				System.out
 						.println(propertyDescriptor.getReadMethod().invoke(t));
 				fieldValues.add(propertyDescriptor.getReadMethod().invoke(t));
-			} else if (field.isAnnotationPresent(Column.class)) {// ·ÇÖ÷¼üÁĞ
+			} else if (field.isAnnotationPresent(Column.class)) {// éä¸»é”®åˆ—
 				fieldNames.append(field.getAnnotation(Column.class).value())
 						.append(",");
 				fieldValues.add(propertyDescriptor.getReadMethod().invoke(t));
 			} else
-				throw new ColumnNotFoundException("Êı¾İ±íÖĞÎ´ÕÒµ½¶ÔÓ¦µÄÁĞ");
+				throw new ColumnNotFoundException("æ•°æ®è¡¨ä¸­æœªæ‰¾åˆ°å¯¹åº”çš„åˆ—");
 			fieldPlaceHolder.append("? ,");
 		}
-		// É¾³ı×îºó¶àÓàµÄ,
+		// åˆ é™¤æœ€åå¤šä½™çš„,
 		fieldNames.deleteCharAt(fieldNames.length() - 1);
 		fieldPlaceHolder.deleteCharAt(fieldPlaceHolder.length() - 1);
 		StringBuilder sql = new StringBuilder();
@@ -76,13 +76,13 @@ public class mysqlDaoImpl<T> implements mysqlDao<T> {
 		pstmt.execute();
 		JdbcUtils.releaseResource(pstmt, null);
 		System.out.println("sql: " + "\n    " + clazz.getSimpleName()
-				+ " ²åÈë³É¹¦£¡");
+				+ " æ’å…¥æˆåŠŸï¼");
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see simpleORM.mysqlDao#update(java.lang.Object) ¸üĞÂ²Ù×÷ param t:¶ÔÏóT£¬ÓÃÓÚ¸üĞÂµÄÊı¾İ
+	 * @see simpleORM.mysqlDao#update(java.lang.Object) æ›´æ–°æ“ä½œ param t:å¯¹è±¡Tï¼Œç”¨äºæ›´æ–°çš„æ•°æ®
 	 */
 	public void update(T t) throws Exception {
 		Class<?> clazz = t.getClass();
@@ -93,27 +93,27 @@ public class mysqlDaoImpl<T> implements mysqlDao<T> {
 		List<Object> fieldValues = new ArrayList<Object>();
 		List<String> fieldPlaceholders = new ArrayList<String>();
 		Field[] fields = clazz.getDeclaredFields();
-		// ÓÃÓÚ»ñµÃÀàÖĞ¶ÔÓ¦µÄÓòµÄ¶ÔÓ¦µÄÖµ
+		// ç”¨äºè·å¾—ç±»ä¸­å¯¹åº”çš„åŸŸçš„å¯¹åº”çš„å€¼
 		PropertyDescriptor propertyDescriptor = null;
 		for (Field field : fields) {
 			propertyDescriptor = new PropertyDescriptor(field.getName(),
 					t.getClass());
-			// Ö÷¼üÓò
+			// ä¸»é”®åŸŸ
 			if (field.isAnnotationPresent(Id.class)) {
 				id = field.getAnnotation(Id.class).value();
 				idObj = propertyDescriptor.getReadMethod().invoke(t);
 
 			}
-			// ÏÂÃæÊÇÆäËûÓò
+			// ä¸‹é¢æ˜¯å…¶ä»–åŸŸ
 			else if (field.isAnnotationPresent(Column.class)) {
 				fieldNames.add(field.getAnnotation(Column.class).value());
 				fieldValues.add(propertyDescriptor.getReadMethod().invoke(t));
-				fieldPlaceholders.add("?"); // ×¢ÒâÕâÀï²»ĞèÒª¼ÓÉÏ¶ººÅ
+				fieldPlaceholders.add("?"); // æ³¨æ„è¿™é‡Œä¸éœ€è¦åŠ ä¸Šé€—å·
 			} else
-				throw new ColumnNotFoundException("Êı¾İ±íÖĞÎ´ÕÒµ½¶ÔÓ¦µÄÁĞ");
+				throw new ColumnNotFoundException("æ•°æ®è¡¨ä¸­æœªæ‰¾åˆ°å¯¹åº”çš„åˆ—");
 		}
 
-		// ÓÉÓÚupdateÓï¾äµÄid¶ÔÓ¦µÄÖ»Ó¦¸ÃÊÇ×îºóÒ»¸ö£¬ËùÒÔÓ¦¸Ãaddµ½×îºóÃæ
+		// ç”±äºupdateè¯­å¥çš„idå¯¹åº”çš„åªåº”è¯¥æ˜¯æœ€åä¸€ä¸ªï¼Œæ‰€ä»¥åº”è¯¥addåˆ°æœ€åé¢
 		fieldValues.add(idObj);
 		StringBuilder sql = new StringBuilder();
 		sql.append("update ").append(tableName).append(" set ");
@@ -121,9 +121,9 @@ public class mysqlDaoImpl<T> implements mysqlDao<T> {
 			sql.append(fieldNames.get(i)).append("=")
 					.append(fieldPlaceholders.get(i)).append(",");
 		}
-		// É¾³ı×îºó¶àÓàµÄ¶ººÅ
+		// åˆ é™¤æœ€åå¤šä½™çš„é€—å·
 		sql.deleteCharAt(sql.length() - 1);
-		// Æ´½ÓsqlÓï¾ä
+		// æ‹¼æ¥sqlè¯­å¥
 		sql.append(" where ").append(id).append(" = ?");
 		System.out.println(sql);
 		PreparedStatement pstmt = JdbcUtils.getConnection().prepareStatement(
@@ -131,14 +131,14 @@ public class mysqlDaoImpl<T> implements mysqlDao<T> {
 		setPsParameter(fieldValues, pstmt, false);
 		pstmt.execute();
 		JdbcUtils.releaseResource(pstmt, null);
-		System.out.println("sql: " + "\n" + clazz.getSimpleName() + " ¸üĞÂ³É¹¦£¡");
+		System.out.println("sql: " + "\n" + clazz.getSimpleName() + " æ›´æ–°æˆåŠŸï¼");
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see simpleORM.mysqlDao#delete(java.lang.Object, java.lang.Class) param
-	 * id:ÏëÉ¾³ıµÄÁĞµÄÖ÷¼üµÄÖµ clazz: ±í¶ÔÓ¦µÄÀàµÄclass
+	 * id:æƒ³åˆ é™¤çš„åˆ—çš„ä¸»é”®çš„å€¼ clazz: è¡¨å¯¹åº”çš„ç±»çš„class
 	 */
 	public void delete(Object id, Class<?> clazz) throws Exception {
 		String tableName = getTableName(clazz);
@@ -153,7 +153,7 @@ public class mysqlDaoImpl<T> implements mysqlDao<T> {
 			}
 		}
 		if (Id == null)
-			throw new IdNotFoundException("Î´ÕÒµ½¶ÔÏó¶ÔÓ¦µÄId");
+			throw new IdNotFoundException("æœªæ‰¾åˆ°å¯¹è±¡å¯¹åº”çš„Id");
 
 		StringBuilder sql = new StringBuilder();
 		sql.append("delete from ").append(tableName).append(" where ")
@@ -164,14 +164,14 @@ public class mysqlDaoImpl<T> implements mysqlDao<T> {
 		setPsParameter(fieldValues, pstmt, false);
 		pstmt.execute();
 		JdbcUtils.releaseResource(pstmt, null);
-		System.out.println("sql: " + "\n" + clazz.getSimpleName() + "É¾³ı³É¹¦£¡ ");
+		System.out.println("sql: " + "\n" + clazz.getSimpleName() + "åˆ é™¤æˆåŠŸï¼ ");
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see simpleORM.mysqlDao#select(java.lang.Object, java.lang.Class) param
-	 * id : Ï£Íû»ñÈ¡µÄobjectÔÚÊı¾İ¿âÖĞµÄÖ÷¼üÖµ param clazz: ¶ÔÓ¦µÄclassµÄclassÊôĞÔ return T : ·µ»ØµÄ¶ÔÏó
+	 * id : å¸Œæœ›è·å–çš„objectåœ¨æ•°æ®åº“ä¸­çš„ä¸»é”®å€¼ param clazz: å¯¹åº”çš„classçš„classå±æ€§ return T : è¿”å›çš„å¯¹è±¡
 	 */
 	public T select(Object id, Class<?> clazz) throws Exception {
 		String tableName = getTableName(clazz);
@@ -183,21 +183,21 @@ public class mysqlDaoImpl<T> implements mysqlDao<T> {
 
 		String IdColumn = new String();
 		Field[] fields = clazz.getDeclaredFields();
-		// IdÖ÷ÒªÊÇÎªÁË»ñÈ¡where×Ó¾äËùÓÃ
+		// Idä¸»è¦æ˜¯ä¸ºäº†è·å–whereå­å¥æ‰€ç”¨
 		for (Field field : fields) {
 			if (field.isAnnotationPresent(Id.class)) {
 				IdColumn = field.getAnnotation(Id.class).value();
 			}
 		}
 		if (IdColumn == null)
-			throw new IdNotFoundException("Î´ÕÒµ½¶ÔÏó¶ÔÓ¦µÄId!");
+			throw new IdNotFoundException("æœªæ‰¾åˆ°å¯¹è±¡å¯¹åº”çš„Id!");
 
-		// ÉèÖÃÖ÷¼üÒÔ¼°Æä¶ÔÓ¦µÄÖµ
+		// è®¾ç½®ä¸»é”®ä»¥åŠå…¶å¯¹åº”çš„å€¼
 		sqlMapper.put(IdColumn, id);
-		// °ó¶¨ËùÓĞµÄÁĞÃû³ÆÒÔ¼°¶ÔÓ¦µÄÓòÖµ
+		// ç»‘å®šæ‰€æœ‰çš„åˆ—åç§°ä»¥åŠå¯¹åº”çš„åŸŸå€¼
 		resObject = selectAll(sqlMapper, clazz);
 
-		System.out.println("sql: " + "\n" + clazz.getSimpleName() + "»ñÈ¡³É¹¦£¡ ");
+		System.out.println("sql: " + "\n" + clazz.getSimpleName() + "è·å–æˆåŠŸï¼ ");
 
 		return resObject.size() > 0 ? resObject.get(0) : null;
 	}
@@ -206,7 +206,7 @@ public class mysqlDaoImpl<T> implements mysqlDao<T> {
 	 * (non-Javadoc)
 	 * 
 	 * @see simpleORM.mysqlDao#selectAll(java.util.Map, java.lang.Class) param
-	 * sqlMap:IdÒÔ¼°¶ÔÓ¦µÄÖµ param clazz£ºÀà¶ÔÓ¦class return List<T> :·µ»ØµÄ¶ÔÏóµÄËùÓĞÊôĞÔµÄ¼¯ºÏ
+	 * sqlMap:Idä»¥åŠå¯¹åº”çš„å€¼ param clazzï¼šç±»å¯¹åº”class return List<T> :è¿”å›çš„å¯¹è±¡çš„æ‰€æœ‰å±æ€§çš„é›†åˆ
 	 */
 	public List<T> selectAll(Map<String, Object> sqlMap, Class<?> clazz)
 			throws Exception {
@@ -219,7 +219,7 @@ public class mysqlDaoImpl<T> implements mysqlDao<T> {
 		Field[] fields = clazz.getDeclaredFields();
 		for (Field field : fields) {
 			fieldName = field.getName();
-			// »ñÈ¡¶ÔÓ¦µÄIdµÄÃû³Æ
+			// è·å–å¯¹åº”çš„Idçš„åç§°
 			if (field.isAnnotationPresent(Id.class)) {
 				Id = field.getAnnotation(Id.class).value();
 				fieldNames.append(Id).append(" as ").append(fieldName)
@@ -230,20 +230,20 @@ public class mysqlDaoImpl<T> implements mysqlDao<T> {
 						.append(",");
 			}
 		}
-		// É¾³ı×îºó¶àÓàµÄ,
+		// åˆ é™¤æœ€åå¤šä½™çš„,
 		fieldNames.deleteCharAt(fieldNames.length() - 1);
 		String sql = "select " + fieldNames + " from " + tableName;
 		System.out.println(sql);
-		// ¸ù¾İsqlMapÖĞµÄÄÚÈİÉèÖÃÌØ¶¨µÄwhere×Ó¾ä£¬
-		// Èç¹ûsqlMapÖĞ´æÔÚid,ÒÔ¼°name,ÄÇÃ´¾ÍÉèÖÃwhere id = ?, name = ?
+		// æ ¹æ®sqlMapä¸­çš„å†…å®¹è®¾ç½®ç‰¹å®šçš„whereå­å¥ï¼Œ
+		// å¦‚æœsqlMapä¸­å­˜åœ¨id,ä»¥åŠname,é‚£ä¹ˆå°±è®¾ç½®where id = ?, name = ?
 		List<Object> whereValues = new ArrayList<Object>();
 		if (sqlMap != null) {
 			List<Object> tmpValues = getWhereValues(sqlMap);
 			if (tmpValues != null) {
-				// whereÓï¾ä,¼ÓÉÏÖ®ºóÕâ¸öÓï¾ä¾Í±ä³ÉÍê³ÉµÄsqlÓï¾äÁË¡£
+				// whereè¯­å¥,åŠ ä¸Šä¹‹åè¿™ä¸ªè¯­å¥å°±å˜æˆå®Œæˆçš„sqlè¯­å¥äº†ã€‚
 				sql += (String) tmpValues.get(0);
-				// Õâ¸ötmpValuesÀïÃæµÄÖµÎ»ÖÃ0ÊÇsqlÓï¾ä£¬ÀàËÆ£¬ where id = ? and name = ? ...
-				// È»ºóµÚ¶ş¸öÎ»ÖÃµÄÖµÊÇsqlÖĞ¸÷¸öÕ¼Î»·û¶ÔÓ¦µÄ¶ÔÏóµÄÖµ
+				// è¿™ä¸ªtmpValuesé‡Œé¢çš„å€¼ä½ç½®0æ˜¯sqlè¯­å¥ï¼Œç±»ä¼¼ï¼Œ where id = ? and name = ? ...
+				// ç„¶åç¬¬äºŒä¸ªä½ç½®çš„å€¼æ˜¯sqlä¸­å„ä¸ªå ä½ç¬¦å¯¹åº”çš„å¯¹è±¡çš„å€¼
 				whereValues = (List<Object>) tmpValues.get(1);
 			}
 		}
@@ -255,7 +255,7 @@ public class mysqlDaoImpl<T> implements mysqlDao<T> {
 		}
 		ResultSet rs = pstmt.executeQuery();
 		while (rs.next()) {
-			// Í¨¹ı·µ»ØµÄrsetÖĞµÄÖµÀ´´´½¨ĞÂµÄ¶ÔÏó
+			// é€šè¿‡è¿”å›çš„rsetä¸­çš„å€¼æ¥åˆ›å»ºæ–°çš„å¯¹è±¡
 			T t = (T) clazz.newInstance();
 			initObject(t, fields, rs);
 			list.add(t);
@@ -267,7 +267,7 @@ public class mysqlDaoImpl<T> implements mysqlDao<T> {
 	}
 
 	/*
-	 * Í¨¹ı¶ÔÏólistÀ´³õÊ¼»¯¶ÔÏó
+	 * é€šè¿‡å¯¹è±¡listæ¥åˆå§‹åŒ–å¯¹è±¡
 	 */
 	private void initObject(Object object, Field[] fields, ResultSet resultSet)
 			throws SQLException, IntrospectionException,
@@ -304,13 +304,13 @@ public class mysqlDaoImpl<T> implements mysqlDao<T> {
 				fieldValue = resultSet.getString(fieldName).split(",");
 			}
 			preDescriptor = new PropertyDescriptor(fieldName, object.getClass());
-			// µ÷ÓÃĞ´·½·¨À´Ïò¶ÔÏóÖĞĞ´Êı¾İ
+			// è°ƒç”¨å†™æ–¹æ³•æ¥å‘å¯¹è±¡ä¸­å†™æ•°æ®
 			preDescriptor.getWriteMethod().invoke(object, fieldValue);
 		}
 	}
 
 	/*
-	 * »ñµÃ
+	 * è·å¾—
 	 */
 	public String getTableName(Class<?> clazz) throws Exception {
 		if (clazz.isAnnotationPresent(Entity.class)) {
@@ -322,7 +322,7 @@ public class mysqlDaoImpl<T> implements mysqlDao<T> {
 	}
 
 	/*
-	 * ÉèÖÃpreparestatementµÄ¶ÔÓ¦µÄÕ¼Î»·ûµÄÖµ
+	 * è®¾ç½®preparestatementçš„å¯¹åº”çš„å ä½ç¬¦çš„å€¼
 	 */
 	@SuppressWarnings("unused")
 	private void setPsParameter(List<Object> values, PreparedStatement pstmt,
@@ -358,9 +358,9 @@ public class mysqlDaoImpl<T> implements mysqlDao<T> {
 	}
 
 	/*
-	 * »ñµÃwhere×Ó¾äÒÔ¼°×Ó¾äÖĞ¶ÔÓ¦µÄÖµ param sqlMapper : selectÑ¡ÏîµÄÀàĞÍÒÔ¼°¶ÔÓ¦µÄÖµ return :
-	 * fieldValues:fieldValues[0]ÖĞÊÇ·µ»ØµÄwhere×Ó¾ä£¬ÀàËÆ where id = ? and name = ?
-	 * fieldValue[1]ÖĞÊÇ·µ»ØµÄwhere×Ó¾ä¶ÔÓ¦µÄÖµ
+	 * è·å¾—whereå­å¥ä»¥åŠå­å¥ä¸­å¯¹åº”çš„å€¼ param sqlMapper : selecté€‰é¡¹çš„ç±»å‹ä»¥åŠå¯¹åº”çš„å€¼ return :
+	 * fieldValues:fieldValues[0]ä¸­æ˜¯è¿”å›çš„whereå­å¥ï¼Œç±»ä¼¼ where id = ? and name = ?
+	 * fieldValue[1]ä¸­æ˜¯è¿”å›çš„whereå­å¥å¯¹åº”çš„å€¼
 	 */
 	private List<Object> getWhereValues(Map<String, Object> sqlMapper) {
 		List<Object> fieldValues = new ArrayList<Object>();
@@ -370,12 +370,12 @@ public class mysqlDaoImpl<T> implements mysqlDao<T> {
 		for (Entry<String, Object> entry : mapEntrys) {
 			fieldValues.add(entry.getValue());
 			Object value = entry.getValue();
-			if (value.getClass() == String.class) // ·Ö³öStringÖ÷ÒªÊÇÎªÁËÊ¹ÓÃÍ¨Åä·û
+			if (value.getClass() == String.class) // åˆ†å‡ºStringä¸»è¦æ˜¯ä¸ºäº†ä½¿ç”¨é€šé…ç¬¦
 				sqlPlaceHolders.append(entry.getKey()).append(" like ? and ");
 			else
 				sqlPlaceHolders.append(entry.getKey()).append(" = ? and ");
 		}
-		// É¾³ı×îºóÒ»¸öandÓï¾ä
+		// åˆ é™¤æœ€åä¸€ä¸ªandè¯­å¥
 		sqlPlaceHolders.delete(sqlPlaceHolders.lastIndexOf("and"),
 				sqlPlaceHolders.length());
 		result.add(sqlPlaceHolders.toString());

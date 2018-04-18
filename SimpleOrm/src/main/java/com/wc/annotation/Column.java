@@ -7,10 +7,8 @@ import java.lang.annotation.Target;
 
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+@Target(ElementType.FIELD)//ç”¨äºæè¿°åŸŸ
 public @interface Column {
-	/*
-	 * ×Ö¶ÎÃû³Æ,ÕâÀïÔİÊ±Ö»ĞèÒªÓÃµ½Õâ¸ö
-	 */
+	// å­—æ®µåç§°,è¿™é‡Œæš‚æ—¶åªéœ€è¦ç”¨åˆ°è¿™ä¸ª
 	String value();
 }

@@ -10,9 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
-/*
- * jdbc¹¤¾ßÀà£¬Ö÷ÒªÓÃÓÚ´ò¿ªÁ¬½ÓÒÔ¼°´´½¨PreparedStatement
- * 
+/**
+ * jdbcå·¥å…·ç±»ï¼Œä¸»è¦ç”¨äºæ‰“å¼€è¿æ¥ä»¥åŠåˆ›å»ºPreparedStatement
  */
 public class JdbcUtils {
 	private static Connection connection = null;
@@ -29,14 +28,12 @@ public class JdbcUtils {
 	}
 
 	/**
-	 * »ñµÃÊı¾İ¿âÁ´½Ó
-	 * 
-	 * @return
+	 * è·å¾—æ•°æ®åº“é“¾æ¥
 	 */
 	public static Connection getConnection() {
 		try {
 			if (connection == null) {
-				// ¼ÓÔØjdbcÇı¶¯
+				// åŠ è½½jdbcé©±åŠ¨
 				Class.forName(properties.getProperty("driverClass"));
 				try {
 					connection = DriverManager.getConnection(
@@ -56,7 +53,7 @@ public class JdbcUtils {
 	}
 
 	/*
-	 * ÊÍ·Å×ÊÔ´
+	 * é‡Šæ”¾èµ„æº
 	 */
 	public static void releaseResource(PreparedStatement pstmt, ResultSet rset) {
 		if (connection != null) {

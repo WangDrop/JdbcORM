@@ -4,24 +4,24 @@ import java.util.List;
 import java.util.Map;
 
 /*
- * 數據庫簡單的crud操作
+ * 鏁告摎搴啊鍠殑crud鎿嶄綔
  */
 public interface mysqlDao<T> {
 
-	// 增添數據
+	// 澧炴坊鏁告摎
 	public void add(T t) throws Exception;
 
-	// 更新數據
+	// 鏇存柊鏁告摎
 	public void update(T t) throws Exception;
 
-	// 刪除數據
+	// 鍒櫎鏁告摎
 	public void delete(Object id, Class<?> clazz) throws Exception;
 
-	// 选择数据 
+	// 閫夋嫨鏁版嵁 
 	public T select(Object id, Class<?> clazz) throws Exception;
 
-	// select的工具類，實際上這個是select的複雜版本，用於處理更多的where信息
-	// 例如 select book_id as id, book_name as name where id = ?, name = ?
+	// select鐨勫伐鍏烽锛屽闅涗笂閫欏�嬫槸select鐨勮闆滅増鏈紝鐢ㄦ柤铏曠悊鏇村鐨剋here淇℃伅
+	// 渚嬪 select book_id as id, book_name as name where id = ?, name = ?
 	public List<T> selectAll(Map<String, Object> sqlMap, Class<?> clazz)
 			throws Exception;
 }

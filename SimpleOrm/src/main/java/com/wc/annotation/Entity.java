@@ -8,8 +8,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Entity {
-	/*
-	 * ±íÃû³Æ
-	 */
+	// è¡¨åç§°
 	String value();
 }
