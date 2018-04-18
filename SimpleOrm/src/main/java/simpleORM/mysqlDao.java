@@ -17,7 +17,7 @@ public interface mysqlDao<T> {
 	// 刪除數據
 	public void delete(Object id, Class<?> clazz) throws Exception;
 
-	// 選擇數據
+	// 选择数据 
 	public T select(Object id, Class<?> clazz) throws Exception;
 
 	// select的工具類，實際上這個是select的複雜版本，用於處理更多的where信息
